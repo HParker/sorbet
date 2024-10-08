@@ -194,3 +194,31 @@ class BlockOverloads
     T.reveal_type(x) # error: `B`
   end
 end
+
+class KwargOverload
+  extend T::Sig
+
+  sig do
+    params(arg0: Integer, kwarg0: Integer).returns(String)
+  end
+  sig do
+    params(arg0: NilClass, kwarg0: Integer).returns(NilClass)
+  end
+  def kwargs_overloaded(arg0, kwarg0: 1);
+    if arg0
+      "hi"
+    end
+  end
+
+  def test
+    x = kwargs_overloaded(1)
+    x = kwargs_overloaded(nil)
+
+    x = kwargs_overloaded(1, kwarg0: 2)
+    T.reveal_type(x) # error: Revealed type: `String`
+    x = kwargs_overloaded(nil, kwarg0: 2)
+    T.reveal_type(x) # error: Revealed type: `NilClass`
+  end
+
+  # TODO: test error if there isn't a positional argument difference
+end

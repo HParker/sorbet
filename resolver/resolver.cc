@@ -3995,12 +3995,20 @@ private:
         };
 
         // TODO(froydnj) better error messages for users trying to provide overloads with kwargs?
+
+	// Allow signatures with different positional arguments
+	// This allows the signatures to be resolved to one based on the type
+	// of the conditional arguments
         if (!absl::c_equal(argv0.posArgs, argv1.posArgs, argsEqual)) {
-            return false;
+            return true;
         }
+
         if (!absl::c_equal(argv0.kwArgs, argv1.kwArgs, argsEqual)) {
             return false;
         }
+
+	return true;
+
         return ((argv0.blkArg.has_value() && !argv1.blkArg.has_value()) ||
                 (!argv0.blkArg.has_value() && argv1.blkArg.has_value()));
     }

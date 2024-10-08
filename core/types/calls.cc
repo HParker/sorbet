@@ -461,9 +461,11 @@ MethodRef guessOverload(const GlobalState &gs, ClassOrModuleRef inClass, MethodR
         }
 
         // If keyword args are present, interpret them as an untyped hash
-        if (numPosArgs < args.size()) {
-            checkArg(numPosArgs, Types::hashOfUntyped());
-        }
+        // if (numPosArgs < args.size()) {
+	//   fprintf(stderr, "Has kwargs! %i\n", numPosArgs);
+	//   checkArg(numPosArgs, Types::hashOfUntyped());
+        // }
+
     }
     if (leftCandidates.empty()) {
         leftCandidates = allCandidatesWithConstraints;
@@ -975,6 +977,7 @@ DispatchResult dispatchCallSymbol(const GlobalState &gs, const DispatchArgs &arg
         }
 
         auto offset = ait - args.args.begin();
+	// TODO this is the call site on the way to the kwarg checking
         if (auto e = matchArgType(gs, *constr, args.receiverLoc(), symbol, method, *arg, spec, args.selfType, targs,
                                   args.argLoc(offset), args.originForUninitialized, args.args.size() == 1)) {
             result.main.errors.emplace_back(std::move(e));
